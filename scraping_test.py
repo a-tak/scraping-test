@@ -42,7 +42,7 @@ class Main():
 
             result_info = ResultInfo()
             
-            r = requests.get(url)
+            r = requests.get(url, timeout=15)
             soup = BeautifulSoup(r.content, "html.parser")
             result_info.title = soup.select("title")[0].text.strip()
 
