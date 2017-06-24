@@ -8,6 +8,6 @@ RUN apk add python3
 RUN pip3 install requests
 RUN pip3 install beautifulsoup4
 ADD scraping_test.py .
-ADD result.py .
+ADD result_info.py .
 RUN chmod 755 scraping_test.py
 CMD ["/scraping_test.py"]
