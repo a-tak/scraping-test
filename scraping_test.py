@@ -31,8 +31,8 @@ class Main():
             print("{0},{1},{2},{3}".format(result_info.result, result_info.title, result_info.url, result_info.note))
             if (result_info.result == True):
                 notices.append(result_info)
-            #テスト用に無条件に飛ぶようにしている
-            slack.send(setting["slack-url"], "{2} {0} : {1}".format(result_info.title, result_info.url, setting["slack-to"]), setting["slack-username"])
+            ##テスト用に無条件に飛ぶようにしている
+            #slack.send(setting["slack-url"], "{2} {0} : {1}".format(result_info.title, result_info.url, setting["slack-to"]), setting["slack-username"])
 
         for notice in notices:
             slack.send(setting["slack-url"], "{2} {0} : {1}".format(notice.title, notice.url, setting["slack-to"]), setting["slack-username"])
