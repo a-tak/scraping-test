@@ -10,6 +10,7 @@ class Main():
         results = []
         results = self.get_yamada()
         results.extend(self.get_joshin())
+        results.extend(self.get_nojima())
 
         for result_info in results:
             print("{0},{1},{2},{3}".format(result_info.result, result_info.title, result_info.url, result_info.note))
@@ -59,6 +60,14 @@ class Main():
 
         return self.get_result(urls, ".fsL", "販売休止中です")
 
+    def get_nojima(self):
+        results = []
+        urls = []
+
+        urls.append("https://online.nojima.co.jp/Nintendo-HAC-S-KABAA-ESET-【NSW】-ニンテンドースイッチ本体-Joy-Con%28L%29-ネオンブルー-%28R%29-ネオンレッド（5年保証セット）-/2810000036439/1/cd/")
+        urls.append("https://online.nojima.co.jp/Nintendo-HAC-S-KAAAA-ESET-【NSW】-ニンテンドースイッチ本体-Joy-Con%28L%29-%28R%29-グレー（5年保証セット）-/2810000036422/1/cd/")
+
+        return self.get_result(urls, ".hassoumeyasu2", "完売御礼")
 if __name__ == "__main__":
     main_obj = Main()
     main_obj.execute()
