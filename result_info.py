@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 # coding: UTF-8
 
-
 class ResultInfo():
     u"""結果格納クラス
     """

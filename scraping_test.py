@@ -4,6 +4,8 @@ import requests
 from result_info import ResultInfo
 from bs4 import BeautifulSoup
 from datetime import datetime
+from slack import Slack
+import yaml
 
 class Main():
     def execute(self):
@@ -12,8 +14,25 @@ class Main():
         results.extend(self.get_joshin())
         results.extend(self.get_nojima())
 
+        yamlfile = "./setting.yaml"
+        with open(yamlfile, "rt") as fp:
+            text = fp.read()
+
+        setting = yaml.safe_load(text)
+
+        print(setting["slack-url"])
+        print(setting["slack-username"])
+
+        slack = Slack()
+
+        notices = []
         for result_info in results:
             print("{0},{1},{2},{3}".format(result_info.result, result_info.title, result_info.url, result_info.note))
+            if (result_info.result == True):
+                notices.append(result_info)
+
+        for notice in notices:
+            slack.send(setting["slack-url"], "{0} : {1}".format(notice.title, notice.url),setting["slack-username"])
 
     def get_result(self, urls, target_element, target_str):
         results = []

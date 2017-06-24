@@ -7,7 +7,8 @@ RUN apk update
 RUN apk add python3
 RUN pip3 install requests
 RUN pip3 install beautifulsoup4
-ADD scraping_test.py .
-ADD result_info.py .
+RUN pip3 install pyyaml
+COPY *.py /
+COPY setting.yaml /
 RUN chmod 755 scraping_test.py
 CMD ["/scraping_test.py"]
