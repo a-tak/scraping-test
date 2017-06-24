@@ -1,2 +1,3 @@
 slack-url: "https://hooks.slack.com/xxxxx"
 slack-username: "notice"
+slack-to: "@hoge"

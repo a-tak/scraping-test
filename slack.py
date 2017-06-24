@@ -13,7 +13,7 @@ class Slack():
             'text': msg, # 投稿するテキスト
             'username': username, # 投稿のユーザー名
             'icon_emoji': u':ghost:', # 投稿のプロフィール画像に入れる絵文字
-            'link_names': 1, # メンションを有効にする
+            'link_names': True, # メンションを有効にする
         }))
 
 
