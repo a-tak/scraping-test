@@ -14,6 +14,7 @@ class Main():
         results = self.get_yamada()
         results.extend(self.get_joshin())
         results.extend(self.get_nojima())
+        results.extend(self.get_yodobashi())
 
         yamlfile = "./setting.yaml"
         with open(yamlfile, "rt") as fp:
@@ -94,6 +95,16 @@ class Main():
         urls.append("https://online.nojima.co.jp/Nintendo-HAC-S-KAAAA-ESET-【NSW】-ニンテンドースイッチ本体-Joy-Con%28L%29-%28R%29-グレー（5年保証セット）-/2810000036422/1/cd/")
 
         return self.get_result(urls, ".hassoumeyasu2", "完売御礼")
+
+    def get_yodobashi(self):
+        results = []
+        urls = []
+
+        urls.append("http://www.yodobashi.com/product/100000001003431566/")
+        urls.append("http://www.yodobashi.com/product/100000001003431565/")
+
+        return self.get_result(urls, ".salesInfo", "予定数の販売を終了しました")
+
 if __name__ == "__main__":
     main_obj = Main()
     main_obj.execute()
