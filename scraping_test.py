@@ -15,6 +15,7 @@ class Main():
         results.extend(self.get_joshin())
         results.extend(self.get_nojima())
         results.extend(self.get_yodobashi())
+        results.extend(self.get_nintendo())
 
         yamlfile = "./setting.yaml"
         with open(yamlfile, "rt") as fp:
@@ -105,6 +106,14 @@ class Main():
 
         return self.get_result(urls, ".salesInfo", "予定数の販売を終了しました")
 
+    def get_nintendo(self):
+        results = []
+        urls = []
+
+        urls.append("https://store.nintendo.co.jp/customize.html")
+
+        return self.get_result(urls, "#custoize_toCart > span > button > span", "SOLD OUT")
+        
 if __name__ == "__main__":
     main_obj = Main()
     main_obj.execute()
