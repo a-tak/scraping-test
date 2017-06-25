@@ -17,6 +17,7 @@ class Main():
         results.extend(self.get_yodobashi())
         results.extend(self.get_nintendo())
         results.extend(self.get_rakutenbooks())
+        results.extend(self.get_sofmap())
 
         yamlfile = "./setting.yaml"
         with open(yamlfile, "rt") as fp:
@@ -62,10 +63,10 @@ class Main():
             if (search_mode==0):
                 self.get_textsearch_result(soup, target_element, target_str, result_info)
             elif (search_mode==1):
-                pass
+                self.get_imgsearch_result(soup, target_element, target_str, result_info)
             else:
                 raise NotImplementedError("Not Implement this search_mode")
-                
+
             results.append(result_info)
 
             #1秒待つ
@@ -74,11 +75,25 @@ class Main():
         return results
 
     def get_textsearch_result(self, soup, target_element, target_str, result_info):
+        u"""指定テキストが存在する事を確認
+        """
         result_info.result = True
         result_info.note = ""
         for element in soup.select(target_element):
             result_info.note = result_info.note + element.text.strip()
             if (element.text.strip() == target_str):
+                result_info.result = False
+                break
+        return result_info   
+
+    def get_imgsearch_result(self, soup, target_element, target_str, result_info):
+        u"""指定画像が存在する事を確認。target_strに画像URLを指定。
+        """
+        result_info.result = True
+        result_info.note = ""
+        for element in soup.select(target_element):
+            result_info.note = result_info.note + element.attrs["src"].strip()
+            if (element.attrs["src"].strip() == target_str):
                 result_info.result = False
                 break
         return result_info   
@@ -143,9 +158,11 @@ class Main():
         results = []
         urls = []
 
-        urls.append("")
+        urls.append("http://www.sofmap.com/product_detail.aspx?sku=13266081&gid=GF44010000")
+        urls.append("http://www.sofmap.com/product_detail.aspx?sku=13266080&gid=GF44010000")
 
-        return self.get_result(urls, "#purchaseBox > div > div > div.availability.s22 > div.status-area.clearfix > div.status-text > div.status-heading > span", "ご注文できない商品*")
+        return self.get_result(urls, ".product-detail-zaikocoment img", "/images/system_icon/zaiko06.gif", search_mode=1)
+
 if __name__ == "__main__":
     main_obj = Main()
     main_obj.execute()
