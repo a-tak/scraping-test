@@ -80,8 +80,9 @@ class Main():
         result_info.result = True
         result_info.note = ""
         for element in soup.select(target_element):
-            result_info.note = result_info.note + element.text.strip()
-            if (element.text.strip() == target_str):
+            got_str = element.text.strip()
+            result_info.note = result_info.note + got_str
+            if (got_str == target_str):
                 result_info.result = False
                 break
         return result_info   
@@ -92,8 +93,9 @@ class Main():
         result_info.result = True
         result_info.note = ""
         for element in soup.select(target_element):
-            result_info.note = result_info.note + element.attrs["src"].strip()
-            if (element.attrs["src"].strip() == target_str):
+            got_str = element.attrs["src"].strip()
+            result_info.note = result_info.note + got_str
+            if (got_str == target_str):
                 result_info.result = False
                 break
         return result_info   
