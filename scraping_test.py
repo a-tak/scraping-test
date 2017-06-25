@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from slack import Slack
 import yaml
+import time
 
 class Main():
     def execute(self):
@@ -60,6 +61,9 @@ class Main():
             result_info.url = url
 
             results.append(result_info)
+
+            #1秒待つ
+            time.sleep(1)
 
         return results
        
