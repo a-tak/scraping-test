@@ -41,7 +41,11 @@ class Main():
         for notice in notices:
             slack.send(setting["slack-url"], "{2} {0} : {1}".format(notice.title, notice.url, setting["slack-to"]), setting["slack-username"])
 
-    def get_result(self, urls, target_element, target_str):
+    def get_result(self, urls, target_element, target_str, *, search_mode=0):
+        u""" HTMLパース
+        search_mode = 0 文字列有無での判断
+                    = 1 画像URL有無での判断(「在庫無し」の画像など)
+        """
         results = []
 
         for url in urls:
@@ -51,25 +55,33 @@ class Main():
             
             r = requests.get(url, timeout=15)
             soup = BeautifulSoup(r.content, "html.parser")
+
             result_info.title = soup.select("title")[0].text.strip()
-
-            result_info.result = True
-            result_info.note = ""
-            for element in soup.select(target_element):
-                result_info.note = result_info.note + element.text.strip()
-                if (element.text.strip() == target_str):
-                    result_info.result = False
-                    break
-
             result_info.url = url
 
+            if (search_mode==0):
+                self.get_textsearch_result(soup, target_element, target_str, result_info)
+            elif (search_mode==1):
+                pass
+            else:
+                raise NotImplementedError("Not Implement this search_mode")
+                
             results.append(result_info)
 
             #1秒待つ
             time.sleep(1)
 
         return results
-       
+
+    def get_textsearch_result(self, soup, target_element, target_str, result_info):
+        result_info.result = True
+        result_info.note = ""
+        for element in soup.select(target_element):
+            result_info.note = result_info.note + element.text.strip()
+            if (element.text.strip() == target_str):
+                result_info.result = False
+                break
+        return result_info   
 
     def get_yamada(self):
         results = []
@@ -126,7 +138,14 @@ class Main():
         urls.append("http://books.rakuten.co.jp/rb/14655634/")
 
         return self.get_result(urls, "#purchaseBox > div > div > div.availability.s22 > div.status-area.clearfix > div.status-text > div.status-heading > span", "ご注文できない商品*")
-        
+
+    def get_sofmap(self):
+        results = []
+        urls = []
+
+        urls.append("")
+
+        return self.get_result(urls, "#purchaseBox > div > div > div.availability.s22 > div.status-area.clearfix > div.status-text > div.status-heading > span", "ご注文できない商品*")
 if __name__ == "__main__":
     main_obj = Main()
     main_obj.execute()
