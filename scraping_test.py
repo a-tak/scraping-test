@@ -16,6 +16,7 @@ class Main():
         results.extend(self.get_nojima())
         results.extend(self.get_yodobashi())
         results.extend(self.get_nintendo())
+        results.extend(self.get_rakutenbooks())
 
         yamlfile = "./setting.yaml"
         with open(yamlfile, "rt") as fp:
@@ -113,6 +114,18 @@ class Main():
         urls.append("https://store.nintendo.co.jp/customize.html")
 
         return self.get_result(urls, "#custoize_toCart > span > button > span", "SOLD OUT")
+        
+    def get_rakutenbooks(self):
+        results = []
+        urls = []
+
+        urls.append("http://books.rakuten.co.jp/rb/14647222/")
+        urls.append("http://books.rakuten.co.jp/rb/14779136/")
+        urls.append("http://books.rakuten.co.jp/rb/14647221/")
+        urls.append("http://books.rakuten.co.jp/rb/14655635/")
+        urls.append("http://books.rakuten.co.jp/rb/14655634/")
+
+        return self.get_result(urls, "#purchaseBox > div > div > div.availability.s22 > div.status-area.clearfix > div.status-text > div.status-heading > span", "ご注文できない商品*")
         
 if __name__ == "__main__":
     main_obj = Main()
