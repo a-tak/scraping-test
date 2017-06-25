@@ -44,6 +44,7 @@ class Main():
 
     def get_result(self, urls, target_element, target_str, *, search_mode=0):
         u""" HTMLパース
+        target_str      在庫無しと見なす文字列の配列
         search_mode = 0 文字列有無での判断
                     = 1 画像URL有無での判断(「在庫無し」の画像など)
         """
@@ -82,7 +83,7 @@ class Main():
         for element in soup.select(target_element):
             got_str = element.text.strip()
             result_info.note = result_info.note + got_str
-            if (got_str == target_str):
+            if (got_str in target_str):
                 result_info.result = False
                 break
         return result_info   
@@ -95,7 +96,7 @@ class Main():
         for element in soup.select(target_element):
             got_str = element.attrs["src"].strip()
             result_info.note = result_info.note + got_str
-            if (got_str == target_str):
+            if (got_str in target_str):
                 result_info.result = False
                 break
         return result_info   
@@ -107,7 +108,7 @@ class Main():
         urls.append("http://www.yamada-denkiweb.com/1177992013")
         urls.append("http://www.yamada-denkiweb.com/1177991016")
 
-        return self.get_result(urls, ".item-notice-block", "好評につき売り切れました")
+        return self.get_result(urls, ".item-notice-block", ["好評につき売り切れました"])
 
     def get_joshin(self):
         results = []
@@ -116,7 +117,7 @@ class Main():
         urls.append("http://joshinweb.jp/game/40519/4902370535709.html")
         urls.append("http://joshinweb.jp/game/40519/4902370535716.html")
 
-        return self.get_result(urls, ".fsL", "販売休止中です")
+        return self.get_result(urls, ".fsL", ["販売休止中です"])
 
     def get_nojima(self):
         results = []
@@ -125,7 +126,7 @@ class Main():
         urls.append("https://online.nojima.co.jp/Nintendo-HAC-S-KABAA-ESET-【NSW】-ニンテンドースイッチ本体-Joy-Con%28L%29-ネオンブルー-%28R%29-ネオンレッド（5年保証セット）-/2810000036439/1/cd/")
         urls.append("https://online.nojima.co.jp/Nintendo-HAC-S-KAAAA-ESET-【NSW】-ニンテンドースイッチ本体-Joy-Con%28L%29-%28R%29-グレー（5年保証セット）-/2810000036422/1/cd/")
 
-        return self.get_result(urls, ".hassoumeyasu2", "完売御礼")
+        return self.get_result(urls, ".hassoumeyasu2", ["完売御礼"])
 
     def get_yodobashi(self):
         results = []
@@ -134,7 +135,7 @@ class Main():
         urls.append("http://www.yodobashi.com/product/100000001003431566/")
         urls.append("http://www.yodobashi.com/product/100000001003431565/")
 
-        return self.get_result(urls, ".salesInfo", "予定数の販売を終了しました")
+        return self.get_result(urls, ".salesInfo", ["予定数の販売を終了しました"])
 
     def get_nintendo(self):
         results = []
@@ -142,7 +143,7 @@ class Main():
 
         urls.append("https://store.nintendo.co.jp/customize.html")
 
-        return self.get_result(urls, "#custoize_toCart > span > button > span", "SOLD OUT")
+        return self.get_result(urls, "#custoize_toCart > span > button > span", ["SOLD OUT"])
         
     def get_rakutenbooks(self):
         results = []
@@ -154,7 +155,7 @@ class Main():
         urls.append("http://books.rakuten.co.jp/rb/14655635/")
         urls.append("http://books.rakuten.co.jp/rb/14655634/")
 
-        return self.get_result(urls, "#purchaseBox > div > div > div.availability.s22 > div.status-area.clearfix > div.status-text > div.status-heading > span", "ご注文できない商品*")
+        return self.get_result(urls, "#purchaseBox > div > div > div.availability.s22 > div.status-area.clearfix > div.status-text > div.status-heading > span", ["ご注文できない商品*"])
 
     def get_sofmap(self):
         results = []
@@ -163,7 +164,7 @@ class Main():
         urls.append("http://www.sofmap.com/product_detail.aspx?sku=13266081&gid=GF44010000")
         urls.append("http://www.sofmap.com/product_detail.aspx?sku=13266080&gid=GF44010000")
 
-        return self.get_result(urls, ".product-detail-zaikocoment img", "/images/system_icon/zaiko06.gif", search_mode=1)
+        return self.get_result(urls, ".product-detail-zaikocoment img", ["/images/system_icon/zaiko06.gif","/images/system_icon/zaiko05.gif"], search_mode=1)
 
 if __name__ == "__main__":
     main_obj = Main()
