@@ -42,11 +42,11 @@ class Main():
             time.sleep(1)
 
 
-    def get_result(self, urls, target_element, target_str, *, search_mode=0):
+    def get_result(self, urls, target_element, target_str, *, search_mode=0, target_attr=""):
         u""" HTMLパース
         target_str      在庫無しと見なす文字列の配列
         search_mode = 0 文字列有無での判断
-                    = 1 画像URL有無での判断(「在庫無し」の画像など)
+                    = 1 属性文字列有無での判断(「在庫無し」の画像src属性など)
         """
         results = []
 
@@ -63,7 +63,7 @@ class Main():
             #タイムアウト時にスキップ
             try:
                 r = requests.get(url, timeout=15)
-            except ConnectTimeout:
+            except ConnectTimeoutError:
                 result_info.note = "Timeout"
                 results.append(result_info)
                 continue
@@ -78,9 +78,11 @@ class Main():
             result_info.title = soup.select("title")[0].text.strip()
 
             if (search_mode==0):
-                self.get_textsearch_result(soup, target_element, target_str, result_info)
+                self.get_text_search_result(soup, target_element, target_str, result_info)
             elif (search_mode==1):
-                self.get_imgsearch_result(soup, target_element, target_str, result_info)
+                if (target_attr.strip()==""):
+                    raise ValueError("target_attr not set")
+                self.get_attr_search_result(soup, target_element, target_str, target_attr, result_info)
             else:
                 raise NotImplementedError("Not Implement this search_mode")
 
@@ -88,7 +90,7 @@ class Main():
 
         return results
 
-    def get_textsearch_result(self, soup, target_element, target_str, result_info):
+    def get_text_search_result(self, soup, target_element, target_str, result_info):
         u"""指定テキストが存在する事を確認
         """
         result_info.result = True
@@ -101,13 +103,13 @@ class Main():
                 break
         return result_info   
 
-    def get_imgsearch_result(self, soup, target_element, target_str, result_info):
-        u"""指定画像が存在する事を確認。target_strに画像URLを指定。
+    def get_attr_search_result(self, soup, target_element, target_str, target_attr, result_info):
+        u"""指定画像が存在する事を確認。target_attrに属性名を指定。
         """
         result_info.result = True
         result_info.note = ""
         for element in soup.select(target_element):
-            got_str = element.attrs["src"].strip()
+            got_str = element.attrs[target_attr].strip()
             result_info.note = result_info.note + got_str
             if (got_str in target_str):
                 result_info.result = False
@@ -177,7 +179,7 @@ class Main():
         urls.append("http://www.sofmap.com/product_detail.aspx?sku=13266081&gid=GF44010000")
         urls.append("http://www.sofmap.com/product_detail.aspx?sku=13266080&gid=GF44010000")
 
-        return self.get_result(urls, ".product-detail-zaikocoment img", ["/images/system_icon/zaiko06.gif","/images/system_icon/zaiko05.gif"], search_mode=1)
+        return self.get_result(urls, ".product-detail-zaikocoment img", ["/images/system_icon/zaiko06.gif","/images/system_icon/zaiko05.gif"], search_mode=1, target_attr="src")
 
 if __name__ == "__main__":
     main_obj = Main()
