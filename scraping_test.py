@@ -36,8 +36,6 @@ class Main():
             print("{0},{1},{2},{3}".format(result_info.result, result_info.title, result_info.url, result_info.note))
             if (result_info.result == True):
                 notices.append(result_info)
-            ##テスト用に無条件に飛ぶようにしている
-            #slack.send(setting["slack-url"], "{2} {0} : {1}".format(result_info.title, result_info.url, setting["slack-to"]), setting["slack-username"])
 
         for notice in notices:
             slack.send(setting["slack-url"], "{2} {0} : {1}".format(notice.title, notice.url, setting["slack-to"]), setting["slack-username"])
@@ -56,19 +54,28 @@ class Main():
             print("{1}:処理中…{0}".format(url, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
 
             result_info = ResultInfo()
+            result_info.url = url
+            result_info.result = False
+
+            #1秒待つ
+            time.sleep(1)
+
             #タイムアウト時にスキップ
             try:
                 r = requests.get(url, timeout=15)
             except ConnectTimeout:
+                result_info.note = "Timeout"
+                results.append(result_info)
                 continue
             
             #404の場合はスキップ
             if (r.status_code==404):
+                result_info.note = "404 Not Foud"
+                results.append(result_info)
                 continue
             soup = BeautifulSoup(r.content, "html.parser")
 
             result_info.title = soup.select("title")[0].text.strip()
-            result_info.url = url
 
             if (search_mode==0):
                 self.get_textsearch_result(soup, target_element, target_str, result_info)
@@ -78,9 +85,6 @@ class Main():
                 raise NotImplementedError("Not Implement this search_mode")
 
             results.append(result_info)
-
-            #1秒待つ
-            time.sleep(1)
 
         return results
 
