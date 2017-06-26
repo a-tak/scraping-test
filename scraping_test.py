@@ -54,8 +54,15 @@ class Main():
             print("{1}:処理中…{0}".format(url, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
 
             result_info = ResultInfo()
+            #タイムアウト時にスキップ
+            try:
+                r = requests.get(url, timeout=15)
+            except ConnectTimeout:
+                continue
             
-            r = requests.get(url, timeout=15)
+            #404の場合はスキップ
+            if (r.status_code==404):
+                continue
             soup = BeautifulSoup(r.content, "html.parser")
 
             result_info.title = soup.select("title")[0].text.strip()
