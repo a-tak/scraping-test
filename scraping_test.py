@@ -18,6 +18,7 @@ class Main():
         results.extend(self.get_nintendo())
         results.extend(self.get_rakutenbooks())
         results.extend(self.get_sofmap())
+        results.extend(self.get_sevennet())
 
         yamlfile = "./setting.yaml"
         with open(yamlfile, "rt") as fp:
@@ -104,16 +105,18 @@ class Main():
         return result_info   
 
     def get_attr_search_result(self, soup, target_element, target_str, target_attr, result_info):
-        u"""指定画像が存在する事を確認。target_attrに属性名を指定。
+        u"""指定属性が存在する事を確認。target_attrに属性名を指定。
         """
         result_info.result = True
         result_info.note = ""
         for element in soup.select(target_element):
-            got_str = element.attrs[target_attr].strip()
-            result_info.note = result_info.note + got_str
-            if (got_str in target_str):
-                result_info.result = False
-                break
+            #属性がない場合は読み飛ばす
+            if (target_attr in element.attrs):
+                got_str = element.attrs[target_attr].strip()
+                result_info.note = result_info.note + got_str
+                if (got_str in target_str):
+                    result_info.result = False
+                    break
         return result_info   
 
     def get_yamada(self):
@@ -180,6 +183,17 @@ class Main():
         urls.append("http://www.sofmap.com/product_detail.aspx?sku=13266080&gid=GF44010000")
 
         return self.get_result(urls, ".product-detail-zaikocoment img", ["/images/system_icon/zaiko06.gif","/images/system_icon/zaiko05.gif"], search_mode=1, target_attr="src")
+
+    def get_sevennet(self):
+        results = []
+        urls = []
+
+        urls.append("http://7net.omni7.jp/detail/2110595637")
+        urls.append("http://7net.omni7.jp/detail/2110595636")
+        urls.append("http://7net.omni7.jp/detail/2110596900")
+        urls.append("http://7net.omni7.jp/detail/2110596901")
+
+        return self.get_result(urls, ".linkBtn", ["在庫切れ","販売終了"], search_mode=1, target_attr="title")
 
 if __name__ == "__main__":
     main_obj = Main()
