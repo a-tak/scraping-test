@@ -168,7 +168,7 @@ class Main():
         urls.append("http://books.rakuten.co.jp/rb/14655635/")
         urls.append("http://books.rakuten.co.jp/rb/14655634/")
 
-        return self.get_result(urls, "#purchaseBox > div > div > div.availability.s22 > div.status-area.clearfix > div.status-text > div.status-heading > span", ["ご注文できない商品*","ご注文できない商品"])
+        return self.get_result(urls, "div.status-heading .status", ["ご注文できない商品*","ご注文できない商品"])
 
     def get_sofmap(self):
         results = []
