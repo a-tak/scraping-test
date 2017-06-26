@@ -41,6 +41,8 @@ class Main():
 
         for notice in notices:
             slack.send(setting["slack-url"], "{2} {0} : {1}".format(notice.title, notice.url, setting["slack-to"]), setting["slack-username"])
+            time.sleep(1)
+
 
     def get_result(self, urls, target_element, target_str, *, search_mode=0):
         u""" HTMLパース
